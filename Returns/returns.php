@@ -8,24 +8,23 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
 </head>
 <body>
-    <div>
-        
-    </div>
     <div class="container my-5">
-        <h2>List of Books</h2>
+        <h2>List of Returns</h2>
         <br>
-        <a class="btn btn-primary" href="/testephp/Books/createBooks.php" role="button">+ New Book</a>
+        <a class="btn btn-primary" href="/testephp/Returns/createReturns.php" role="button">+ New Return</a>
         <table class="table">
             <br>
             <br>
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Title</th>
-                    <th>Author</th>
-                    <th>Category</th>
-                    <th>Stock</th>
-                    <th>Created At</th>
+                    <th>Book's Title</th>
+                    <th>Reader's CPF</th>
+                    <th>Loan's ID</th>
+                    <th>Loan's Date</th>
+                    <th>Returns At</th>
+                    <th>Status</th>
+                    <th>Fine</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -43,7 +42,7 @@
                     }
                     
 
-                    $sql = "SELECT * FROM books";
+                    $sql = "SELECT * FROM returnbooks";
                     $result = $connection-> query($sql);
 
                     if(!$result){
@@ -55,13 +54,15 @@
                         <tr>
                             <td>$row[id]</td>
                             <td>$row[title]</td>
-                            <td>$row[author]</td>
-                            <td>$row[category]</td>
-                            <td>$row[stock]</td>
+                            <td>$row[cpfReader]</td>
+                            <td>$row[idLoan]</td>
+                            <td>$row[dateLoan]</td>
                             <td>$row[created_at]</td>
+                            <td>$row[status]</td>
+                            <td>$row[fine]</td>
                             <td>
-                                <a href='/testephp/Books/editBooks.php?id=$row[id]' class='btn btn-primary btn-sm'>Edit</a>
-                                <a href='/testephp/Books/deleteBooks.php?id=$row[id]' class='btn btn-danger btn-sm' >Delete</a>
+                                <a href='/testephp/Returns/editReturns.php?id=$row[id]' class='btn btn-primary btn-sm'>Edit</a>
+                                <a href='/testephp/Returns/deleteReturns.php?id=$row[id]' class='btn btn-danger btn-sm' >Delete</a>
                             </td>
                         </tr>
                         ";

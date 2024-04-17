@@ -10,6 +10,7 @@ $id = "";
 $title = "";
 $author = "";
 $category = "";
+$stock = "";
 
 $errorMessage = "";
 $successMessage = "";
@@ -19,15 +20,16 @@ if( $_SERVER['REQUEST_METHOD'] == 'POST'){
     $title = $_POST["title"];
     $author = $_POST["author"];
     $category = $_POST["category"];
+    $stock = $_POST["stock"];
 
     do{
-        if( empty($title) || empty($author) || empty($category) ) {
+        if( empty($title) || empty($author) || empty($category) || empty($stock)) {
             $errorMessage = "All the fields are required";
             break;
         }
 
         $sql = "INSERT INTO books(title, author, category) " . 
-                "VALUES ('$title', '$author', '$category')";
+                "VALUES ('$title', '$author', '$category', '$stock')";
         $result = $connection->query($sql);
 
         if(!$result) {
@@ -38,6 +40,7 @@ if( $_SERVER['REQUEST_METHOD'] == 'POST'){
         $title = "";
         $author = "";
         $category = "";
+        $stock = "";
 
         $successMessage = "Book added correctly";
 
@@ -95,6 +98,12 @@ if( $_SERVER['REQUEST_METHOD'] == 'POST'){
                     <option value="Romance">Romance</option>
                 </select>
             </div>
+            <div class="row mb-3">
+                <label class="col-sm-3 col-form-label">Stock</label>
+                <div class="col-sm-6">
+                    <input type="number" class="form-control" name="stock" value="<?php echo $stock; ?>">
+                </div>
+            </div> 
 
 
             <?php

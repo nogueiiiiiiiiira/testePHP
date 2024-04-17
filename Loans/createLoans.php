@@ -6,67 +6,42 @@ $database = "testephp";
 
 $connection = new mysqli($servername, $username, $password, $database);
 
-
-$id = "";
 $title = "";
-$author = "";
-$category = "";
-$stock = "";
+$cpfReader = "";
 
 $errorMessage = "";
 $successMessage = "";
 
-if( $_SERVER['REQUEST_METHOD'] == 'GET') {
-
-    if( !isset($_GET["id"])) {
-        header("location: /testephp/Books/books.php");
-        exit;
-    }
-
-    $id = $_GET["id"];
-
-    $sql = "SELECT * FROM books WHERE id=$id";
-    $result = $connection-> query($sql);
-    $row = $result->fetch_assoc();
-
-    $title = $row["title"];
-    $author = $row["author"];
-    $category = $row["category"];     
-    $stock = $row["stock"];     
-}
-
-else{
-    $id = $_POST["id"];
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $title = $_POST["title"];
-    $author = $_POST["author"];
-    $category = $_POST["category"];
-    $stock = $_POST["stock"];
+    $cpfReader = $_POST["cpfReader"];
 
-    do{
-        if( empty($id) || empty($title) || empty($author) || empty($category) || empty($stock) ) {
+    do {
+        if (empty($title) || empty($cpfReader)) {
             $errorMessage = "All the fields are required";
             break;
         }
 
-        $sql = "UPDATE books " .
-                "SET title = '$title', author = '$author', category = '$category', stock = '$stock' " . 
-                "WHERE id = $id ";
+        $returnForecast = date('Y-m-d', strtotime('+7 days'));
 
+        $sql = "INSERT INTO loans(title, cpfReader, returnForecast) " .
+            "VALUES ('$title', '$cpfReader', '$returnForecast')";
         $result = $connection->query($sql);
 
-        if(!$result) {
+        if (!$result) {
             $errorMessage = "Invalid query: " . $connection->error;
             break;
         }
 
-        $successMessage = "Book updated correctly";
+        $title = "";
+        $cpfReader = "";
 
-        header("location: /testephp/Books/books.php");
+        $successMessage = "Loan added correctly";
+
+        header("location: /testephp/Loans/loans.php");
         exit;
-
-    } while(true);
+    } while (false);
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -81,7 +56,7 @@ else{
 </head>
 <body>
     <div class="container my-5">
-        <h2>Edit Book</h2>
+        <h2>+ New Loan</h2>
 
         <?php
             if( !empty($errorMessage) ) {
@@ -94,39 +69,19 @@ else{
             }
         ?>
 
-            <form method="post" >
-            <input type="hidden" name="id" value="<?php echo $id; ?>" >
+        <form method="post" >
             <div class="row mb-3">
-                <label class="col-sm-3 col-form-label">Title</label>
+                <label class="col-sm-3 col-form-label">Book Title</label>
                 <div class="col-sm-6">
                     <input type="text" class="form-control" name="title" value="<?php echo $title; ?>">
                 </div>
             </div>
             <div class="row mb-3">
-                <label class="col-sm-3 col-form-label">Author</label>
+                <label class="col-sm-3 col-form-label">Reader CPF</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="author" value="<?php echo $author; ?>">
+                    <input type="text" class="form-control" name="cpfReader" value="<?php echo $cpfReader; ?>">
                 </div>
             </div> 
-            <div class="row mb-3">
-                <label class="col-sm-3 col-form-label">Category</label>
-                <div class="col-sm-6">
-                    <select class="form-select" name="category" id="category">
-                        <option value="">Select the category:</option>
-                        <option value="Ficção" <?php if ($category == "ficcao") echo "selected"; ?>>Ficção</option>
-                        <option value="Não-Ficção" <?php if ($category == "nao-ficcao") echo "selected"; ?>>Não Ficção</option>
-                        <option value="Aventura" <?php if ($category == "aventura") echo "selected"; ?>>Aventura</option>
-                        <option value="Romance" <?php if ($category == "romance") echo "selected"; ?>>Romance</option>
-                    </select>
-                </div>
-            </div>
-            <div class="row mb-3">
-                <label class="col-sm-3 col-form-label">Stock</label>
-                <div class="col-sm-6">
-                    <input type="text" class="form-control" name="stock" value="<?php echo $stock; ?>">
-                </div>
-            </div> 
-
 
             <?php
                 if( !empty($successMessage) ) {
@@ -148,7 +103,7 @@ else{
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
                 <div class="col-sm-3 d-grid">
-                    <a href="/testephp/Books/books.php" class="btn btn-outline-primary" role="button">Cancel</a>
+                    <a href="/testephp/Loans/loans.php" class="btn btn-outline-primary" role="button">Cancel</a>
                 </div>
             </div>
         </form>

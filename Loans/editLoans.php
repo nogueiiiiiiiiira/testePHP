@@ -9,9 +9,7 @@ $connection = new mysqli($servername, $username, $password, $database);
 
 $id = "";
 $title = "";
-$author = "";
-$category = "";
-$stock = "";
+$cpfReader = "";
 
 $errorMessage = "";
 $successMessage = "";
@@ -19,37 +17,33 @@ $successMessage = "";
 if( $_SERVER['REQUEST_METHOD'] == 'GET') {
 
     if( !isset($_GET["id"])) {
-        header("location: /testephp/Books/books.php");
+        header("location: /testephp/Loans/loans.php");
         exit;
     }
 
     $id = $_GET["id"];
 
-    $sql = "SELECT * FROM books WHERE id=$id";
+    $sql = "SELECT * FROM loans WHERE id=$id";
     $result = $connection-> query($sql);
     $row = $result->fetch_assoc();
 
     $title = $row["title"];
-    $author = $row["author"];
-    $category = $row["category"];     
-    $stock = $row["stock"];     
+    $cpfReader = $row["cpfReader"];
+                   
 }
-
 else{
     $id = $_POST["id"];
     $title = $_POST["title"];
-    $author = $_POST["author"];
-    $category = $_POST["category"];
-    $stock = $_POST["stock"];
+    $cpfReader = $_POST["cpfReader"];
 
     do{
-        if( empty($id) || empty($title) || empty($author) || empty($category) || empty($stock) ) {
+        if( empty($id) || empty($title) || empty($cpfReader)) {
             $errorMessage = "All the fields are required";
             break;
         }
 
-        $sql = "UPDATE books " .
-                "SET title = '$title', author = '$author', category = '$category', stock = '$stock' " . 
+        $sql = "UPDATE loans " .
+                "SET title = '$title', cpfReader = '$cpfReader' " . 
                 "WHERE id = $id ";
 
         $result = $connection->query($sql);
@@ -59,9 +53,9 @@ else{
             break;
         }
 
-        $successMessage = "Book updated correctly";
+        $successMessage = "Loan updated correctly";
 
-        header("location: /testephp/Books/books.php");
+        header("location: /testephp/Loans/loans.php");
         exit;
 
     } while(true);
@@ -81,7 +75,7 @@ else{
 </head>
 <body>
     <div class="container my-5">
-        <h2>Edit Book</h2>
+        <h2>Edit Librarian</h2>
 
         <?php
             if( !empty($errorMessage) ) {
@@ -94,39 +88,20 @@ else{
             }
         ?>
 
-            <form method="post" >
+        <form method="post" >
             <input type="hidden" name="id" value="<?php echo $id; ?>" >
             <div class="row mb-3">
-                <label class="col-sm-3 col-form-label">Title</label>
+                <label class="col-sm-3 col-form-label">Book Title</label>
                 <div class="col-sm-6">
                     <input type="text" class="form-control" name="title" value="<?php echo $title; ?>">
                 </div>
             </div>
             <div class="row mb-3">
-                <label class="col-sm-3 col-form-label">Author</label>
+                <label class="col-sm-3 col-form-label">Reader CPF</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="author" value="<?php echo $author; ?>">
-                </div>
-            </div> 
-            <div class="row mb-3">
-                <label class="col-sm-3 col-form-label">Category</label>
-                <div class="col-sm-6">
-                    <select class="form-select" name="category" id="category">
-                        <option value="">Select the category:</option>
-                        <option value="Ficção" <?php if ($category == "ficcao") echo "selected"; ?>>Ficção</option>
-                        <option value="Não-Ficção" <?php if ($category == "nao-ficcao") echo "selected"; ?>>Não Ficção</option>
-                        <option value="Aventura" <?php if ($category == "aventura") echo "selected"; ?>>Aventura</option>
-                        <option value="Romance" <?php if ($category == "romance") echo "selected"; ?>>Romance</option>
-                    </select>
+                    <input type="text" class="form-control" name="cpfReader" value="<?php echo $cpfReader; ?>">
                 </div>
             </div>
-            <div class="row mb-3">
-                <label class="col-sm-3 col-form-label">Stock</label>
-                <div class="col-sm-6">
-                    <input type="text" class="form-control" name="stock" value="<?php echo $stock; ?>">
-                </div>
-            </div> 
-
 
             <?php
                 if( !empty($successMessage) ) {
@@ -148,7 +123,7 @@ else{
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
                 <div class="col-sm-3 d-grid">
-                    <a href="/testephp/Books/books.php" class="btn btn-outline-primary" role="button">Cancel</a>
+                    <a href="/testephp/Loans/loans.php" class="btn btn-outline-primary" role="button">Cancel</a>
                 </div>
             </div>
         </form>
