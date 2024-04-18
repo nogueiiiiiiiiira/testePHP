@@ -31,22 +31,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $returnDate = date('Y-m-d');
             $daysOverdue = $returnDate - $dateLoan;
 
-            if ($returnDate < $returnForecast) {
-                $status = "Return made correctly";
+            if ($returnDate > $returnForecast) {
+                $reason = "Return made correctly";
                 $fine = "None";
-            } elseif ($returnDate > $returnForecast) {
-                $status = "Return made late";
+            } elseif ($returnDate < $returnForecast) {
+                $reason = "Return made late";
+                $status = "Attributed";
                 $fine = "Attributed";
                 $price = 1 * $daysOverdue;
 
-                $sql = "INSERT INTO fines(title, cpfReader, daysLate, status, price) VALUES ('$title', '$cpfReader', '$daysOverdue', '$status', '$price')";
+                $sql = "INSERT INTO fines(title, cpfReader, daysLate, reason, status, price) VALUES ('$title', '$cpfReader', '$daysOverdue', '$reason', '$status', '$price')";
                 $connection->query($sql);
 
                 $successMessage = "Fine attributed";
             }
 
             $stmt = $connection->prepare("INSERT INTO returns(title, cpfReader, idLoan, dateLoan, returnForecast, status, fine) VALUES (?, ?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param("sssssss", $loanTitle, $cpfReader, $idLoan, $dateLoan, $returnForecast, $status, $fine);
+            $stmt->bind_param("sssssss", $loanTitle, $cpfReader, $idLoan, $dateLoan, $returnForecast, $reason, $fine);
 
             if ($stmt->execute()) {
                 $successMessage = "Return added correctly";
