@@ -16,7 +16,6 @@ $errorMessage = "";
 $successMessage = "";
 
 if( $_SERVER['REQUEST_METHOD'] == 'POST'){
-    $id = $_POST["id"];
     $title = $_POST["title"];
     $author = $_POST["author"];
     $category = $_POST["category"];
@@ -28,7 +27,7 @@ if( $_SERVER['REQUEST_METHOD'] == 'POST'){
             break;
         }
 
-        $sql = "INSERT INTO books(title, author, category) " . 
+        $sql = "INSERT INTO books(title, author, category, stock) " . 
                 "VALUES ('$title', '$author', '$category', '$stock')";
         $result = $connection->query($sql);
 

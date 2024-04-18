@@ -8,10 +8,6 @@ $connection = new mysqli($servername, $username, $password, $database);
 
 $title = "";
 $cpfReader = "";
-$idLoan = "";
-$dateLoan = "";
-$status = "";
-$fine = "";
 
 $errorMessage = "";
 $successMessage = "";
@@ -19,46 +15,53 @@ $successMessage = "";
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $title = $_POST["title"];
     $cpfReader = $_POST["cpfReader"];
-    $idLoan = $_POST["idLoan"];
-    $dateLoan = $_POST["dateLoan"];
-    $status = $_POST["status"];
-    $fine = $_POST["fine"];
 
-    if (empty($title) || (empty($cpfReader) && empty($idLoan))) {
-        $errorMessage = "Preencha o título do livro e o CPF do leitor ou preencha o identificador do empréstimo.";
+    if (empty($title) || empty($cpfReader)) {
+        $errorMessage = "All the fields are required";
     } else {
-        $returnForecastQuery = "SELECT returnForecast FROM loans WHERE cpfReader = '$cpfReader' AND title = '$title'";
-        $returnForecastResult = $connection->query($returnForecastQuery);
+        $stmt = $connection->prepare("SELECT title, id, created_at, returnForecast FROM loans WHERE title = ? AND cpfReader = ?");
+        $stmt->bind_param("ss", $title, $cpfReader);
+        $stmt->execute();
+        $stmt->store_result();
 
-        if (!$returnForecastResult) {
-            $errorMessage = "Erro ao executar a consulta: " . $connection->error;
-        } else {
-            $row = $returnForecastResult->fetch_assoc();
-            $returnForecast = $row['returnForecast'];
+        if ($stmt->num_rows > 0) {
+            $stmt->bind_result($loanTitle, $idLoan, $dateLoan, $returnForecast);
+            $stmt->fetch();
 
-            if ($returnForecast < date('Y-m-d')) {
+            $returnDate = date('Y-m-d');
+            $daysOverdue = $returnDate - $dateLoan;
+
+            if ($returnDate < $returnForecast) {
+                $status = "Return made correctly";
+                $fine = "None";
+            } elseif ($returnDate > $returnForecast) {
                 $status = "Return made late";
                 $fine = "Attributed";
-            } elseif ($returnForecast >= date('Y-m-d')) {
-                $status = "Return made successfully";
-                $fine = "None";
+                $price = 1 * $daysOverdue;
+
+                $sql = "INSERT INTO fines(title, cpfReader, daysLate, status, price) VALUES ('$title', '$cpfReader', '$daysOverdue', '$status', '$price')";
+                $connection->query($sql);
+
+                $successMessage = "Fine attributed";
             }
 
-            $dateLoan = "SELECT created_at FROM loans WHERE cpfReader = '$cpfReader' AND title = '$title' ";
-            $sql = "INSERT INTO returnbooks(title, cpfReader, idLoan, dateLoan, status, fine) VALUES ('$title', '$cpfReader', '$idLoan', '$dateLoan', '$status', '$fine')";
-            $result = $connection->query($sql);
+            $stmt = $connection->prepare("INSERT INTO returns(title, cpfReader, idLoan, dateLoan, returnForecast, status, fine) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            $stmt->bind_param("sssssss", $loanTitle, $cpfReader, $idLoan, $dateLoan, $returnForecast, $status, $fine);
 
-            if (!$result) {
-                $errorMessage = "Consulta inválida: " . $connection->error;
-            } else {
-                $successMessage = "Empréstimo adicionado corretamente";
-                header("Location: /testephp/Returns/returns.php");
+            if ($stmt->execute()) {
+                $successMessage = "Return added correctly";
+                header("location: /testephp/Returns/returns.php");
                 exit;
+            } else {
+                $errorMessage = "Error inserting return data: " . $connection->error;
             }
+        } else {
+            $errorMessage = "No loan found for the provided title and CPF reader";
         }
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -96,15 +99,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <label class="col-sm-3 col-form-label">Reader CPF</label>
                 <div class="col-sm-6">
                     <input type="text" class="form-control" name="cpfReader" value="<?php echo $cpfReader; ?>">
-                </div>
-            </div>
-            <br>
-            <h2>OR</h2>
-            <br>
-            <div class="row mb-3">
-                <label class="col-sm-3 col-form-label">Loan ID</label>
-                <div class="col-sm-6">
-                    <input type="text" class="form-control" name="idLoan" value="<?php echo $idLoan; ?>">
                 </div>
             </div>
 

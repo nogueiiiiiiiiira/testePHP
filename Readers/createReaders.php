@@ -30,6 +30,7 @@ if( $_SERVER['REQUEST_METHOD'] == 'POST'){
 
         $sql = "INSERT INTO readers(name, email, cpf, phone, address) " . 
                 "VALUES ('$name', '$email', '$cpf', '$phone', '$address')";
+                
         $result = $connection->query($sql);
 
         if(!$result) {

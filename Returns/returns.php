@@ -22,6 +22,7 @@
                     <th>Reader's CPF</th>
                     <th>Loan's ID</th>
                     <th>Loan's Date</th>
+                    <th>Return Forecast</th>
                     <th>Returns At</th>
                     <th>Status</th>
                     <th>Fine</th>
@@ -42,7 +43,7 @@
                     }
                     
 
-                    $sql = "SELECT * FROM returnbooks";
+                    $sql = "SELECT * FROM returns";
                     $result = $connection-> query($sql);
 
                     if(!$result){
@@ -57,6 +58,7 @@
                             <td>$row[cpfReader]</td>
                             <td>$row[idLoan]</td>
                             <td>$row[dateLoan]</td>
+                            <td>$row[returnForecast]</td>
                             <td>$row[created_at]</td>
                             <td>$row[status]</td>
                             <td>$row[fine]</td>
