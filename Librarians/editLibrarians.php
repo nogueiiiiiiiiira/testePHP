@@ -13,6 +13,8 @@ $email = "";
 $cpf = "";
 $phone = "";
 $address = "";
+$password = "";
+$passwordConfirm = "";
 
 $errorMessage = "";
 $successMessage = "";
@@ -35,6 +37,8 @@ if( $_SERVER['REQUEST_METHOD'] == 'GET') {
     $cpf = $row["cpf"];
     $phone = $row["phone"];
     $address = $row["address"];
+    $password = $row["password"];
+    $passwordConfirm = $row["pass$passwordConfirm"];
                    
 }
 else{
@@ -44,15 +48,21 @@ else{
     $cpf = $_POST["cpf"];
     $phone = $_POST["phone"];
     $address = $_POST["address"];
+    $password = $_POST["pass$password"];
+    $passwordConfirm = $_POST["pass$passwordConfirm"];
 
     do{
-        if( empty($id) || empty($name) || empty($email) || empty($cpf) || empty($phone) || empty($address) ) {
+        if( empty($id) || empty($name) || empty($email) || empty($cpf) || empty($phone) || empty($address) || empty($password) || empty($passwordConfirm) ){
             $errorMessage = "All the fields are required";
             break;
         }
 
+        if($passwordConfirm != $password) {
+            $errorMessage = "Passwords don't match";
+        }
+
         $sql = "UPDATE librarians " .
-                "SET name = '$name', email = '$email', cpf = '$cpf', phone = '$phone', address = '$address' " . 
+                "SET name = '$name', email = '$email', cpf = '$cpf', phone = '$phone', address = '$address', password = '$password', passwordConfirm = '$passwordConfirm' " . 
                 "WHERE id = $id ";
 
         $result = $connection->query($sql);
@@ -127,6 +137,18 @@ else{
                 <label class="col-sm-3 col-form-label">Address</label>
                 <div class="col-sm-6">
                     <input type="text" class="form-control" name="address" value="<?php echo $address; ?>">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-sm-3 col-form-label">Passwprd</label>
+                <div class="col-sm-6">
+                    <input type="password" class="form-control" name="password" value="<?php echo $password; ?>">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-sm-3 col-form-label">Address</label>
+                <div class="col-sm-6">
+                    <input type="password" class="form-control" name="passwordConfirm" value="<?php echo $passwordConfirm; ?>">
                 </div>
             </div>
 
