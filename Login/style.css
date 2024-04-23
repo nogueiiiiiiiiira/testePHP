@@ -1,60 +1,57 @@
-.body {
+.mybody {
     font-family: Arial, sans-serif;
     background-color: #f5f5f5;
     display: flex;
-    height: 100vh;
-    width: 40vw;
-    justify-content: center;
-    align-items: center;
-    margin-left: -50vw;
+    width: 100vw;
   }
   
-  .container {
+  .mycontainer {
     background-color: #fff;
     border-radius: 4px;
     box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;  padding: 32px;
     width: 400px;
     height: 500px;
     text-align: center;
-    justify-content: center;
-    align-items: center;
-  }
+    margin-top: 15vh;
+    margin-left: 5vw;
+}
   
-  .inputs{
+  .myinputs{
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
   }
   
-  h2{
+  .myh2{
     margin-top: 0;
+    font-weight: bold;
   }
   
-  input[type="text"],
-  input[type="password"] {
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    display: block;
-    margin: 16px 0;
-    padding: 8px;
-    width: 80%;
-    height: 60%;
-  }
+  .inputtext,
+  .inputpassword {
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      display: block;
+      margin: 16px 0;
+      padding: 8px;
+      width: 80%;
+      height: 50%;
+    }
   
-  input[type="submit"] {
-    background-color: #4CAF50;
-    border: none;
-    border-radius: 4px;
-    color: #fff;
-    cursor: pointer;
-    padding: 12px 24px;
-  }
-  
-  input[type="submit"]:hover {
-    background-color: #45a049;
-  }
-  
+    .mybutton{
+      background-color: #4CAF50;
+      border: none;
+      border-radius: 4px;
+      color: #fff;
+      cursor: pointer;
+      padding: 12px 24px;
+    }
+    
+  .mybutton:hover{
+      background-color: #45a049;
+    }
+    
   .forgotPassword {
     color: #4CAF50;
     margin-left: 50px;
@@ -70,7 +67,7 @@
     color: black;
   }
   
-  .button{
+  .mybutton{
     width: 85%;
   }
   
@@ -83,11 +80,4 @@
     align-items: center;
     font-size: 15px;
     margin-left: 4px;
-  }
-  
-  .menu {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
   }

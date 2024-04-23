@@ -17,7 +17,7 @@ $passwordConfirm = "";
 $errorMessage = "";
 $successMessage = "";
 
-if( $_SERVER['REQUEST_METHOD'] == 'POST'){
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $name = $_POST["name"];
     $email = $_POST["email"];
     $cpf = $_POST["cpf"];
@@ -26,40 +26,35 @@ if( $_SERVER['REQUEST_METHOD'] == 'POST'){
     $password = $_POST["password"];
     $passwordConfirm = $_POST["passwordConfirm"];
 
-    do{
-        if( empty($name) || empty($email) || empty($cpf) || empty($phone) || empty($address) || empty($password) || empty($passwordConfirm) ){
-            $errorMessage = "All the fields are required";
-            break;
-        }
+    if (empty($name) || empty($email) || empty($cpf) || empty($phone) || empty($address) || empty($password) || empty($passwordConfirm)) {
+        $errorMessage = "All fields are required";
+    } elseif ($passwordConfirm != $password) {
+        $errorMessage = "The passwords don't match";
+    } else {
 
-        if( $passwordConfirm != $password ){
-            $errorMessage = ("The passwords don't match");
-            break;
-        }
+        $checkSql = "SELECT * FROM readers WHERE cpf='$cpf' OR phone='$phone' OR email='$email'
+             UNION
+             SELECT * FROM librarians WHERE cpf='$cpf' OR phone='$phone' OR email='$email'";
+        $checkResult = $connection->query($checkSql);
 
-        $sql = "INSERT INTO librarians(name, email, cpf, phone, address, password, passwordConfirm) " . 
+        if ($checkResult->num_rows > 0) {
+            $errorMessage = "CPF, phone number, or email already exists in the database";
+        } else {
+
+            $sql = "INSERT INTO librarians(name, email, cpf, phone, address, password, passwordConfirm) " .
                 "VALUES ('$name', '$email', '$cpf', '$phone', '$address', '$password', '$passwordConfirm')";
-        $result = $connection->query($sql);
+            $result = $connection->query($sql);
 
-        if(!$result) {
-            $errorMessage = "Invalid query: " . $connection->error;
-            break;
+            if (!$result) {
+                $errorMessage = "Invalid query: " . $connection->error;
+            } else {
+                $successMessage = "Librarian added correctly";
+
+                header("location: /testephp/Librarians/librarians.php");
+                exit;
+            }
         }
-
-        $name = "";
-        $email = "";
-        $cpf = "";
-        $phone = "";    
-        $address = "";
-        $password = "";
-        $passwordConfirm = "";
-
-        $successMessage = "Librarian added correctly";
-
-        header("location: /testephp/Librarians/librarians.php");
-        exit;
-
-    } while (false);
+    }
 }
 ?>
 
@@ -77,16 +72,12 @@ if( $_SERVER['REQUEST_METHOD'] == 'POST'){
     <div class="container my-5">
         <h2>+ New Librarian</h2>
 
-        <?php
-            if( !empty($errorMessage) ) {
-                echo "
-                    <div class='alert alert-warning alert-dismissible fade show' role='alert'>
-                        <strong>$errorMessage</strong>
-                        <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-                    </div>
-                ";
-            }
-        ?>
+        <?php if (!empty($errorMessage)) : ?>
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong><?php echo $errorMessage; ?></strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php endif; ?>
 
         <form method="post" >
             <div class="row mb-3">

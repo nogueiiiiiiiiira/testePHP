@@ -28,10 +28,21 @@ if( $_SERVER['REQUEST_METHOD'] == 'POST'){
             break;
         }
 
-        $sql = "INSERT INTO readers(name, email, cpf, phone, address) " . 
-                "VALUES ('$name', '$email', '$cpf', '$phone', '$address')";
+        $checkSql = "SELECT * FROM readers WHERE cpf='$cpf' OR phone='$phone' OR email='$email'
+             UNION
+             SELECT * FROM librarians WHERE cpf='$cpf' OR phone='$phone' OR email='$email'";
+        $checkResult = $connection->query($checkSql);
+
+        if ($checkResult->num_rows > 0) {
+            $errorMessage = "CPF, phone number, or email already exists in the database";
+        } 
+
+        else{
+            
+            $sql = "INSERT INTO readers(name, email, cpf, phone, address) " . 
+            "VALUES ('$name', '$email', '$cpf', '$phone', '$address')";
                 
-        $result = $connection->query($sql);
+            $result = $connection->query($sql);
 
         if(!$result) {
             $errorMessage = "Invalid query: " . $connection->error;
@@ -48,9 +59,10 @@ if( $_SERVER['REQUEST_METHOD'] == 'POST'){
 
         header("location: /testephp/Readers/readers.php");
         exit;
+    }
 
     } while (false);
-}
+    }
 ?>
 
 <!DOCTYPE html>
