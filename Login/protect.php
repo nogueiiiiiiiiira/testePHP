@@ -7,6 +7,4 @@ if(!isset($_SESSION)) {
 if(!isset($_SESSION['id'])) {
     die("You can't acess this page.<p><a href=\"index.php\">Enter</a></p>");
 }
-
-
 ?>

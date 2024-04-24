@@ -1,0 +1,64 @@
+CREATE TABLE `books` (
+   id INT(100) NOT NULL,
+  `title` VARCHAR(100) DEFAULT NULL,
+  `author` VARCHAR(100) DEFAULT NULL,
+  `category` VARCHAR(100) DEFAULT NULL,
+  `stock` INT(100) DEFAULT NULL,
+  `created_at` DATE DEFAULT CURRENT_TIMESTAMP()
+);
+
+CREATE TABLE `fines` (
+  `id` INT(100) NOT NULL,
+  `title` VARCHAR(100) DEFAULT NULL,
+  `cpfReader` VARCHAR(20) DEFAULT NULL,
+  `daysLate` INT(100) DEFAULT NULL,
+  `reason` VARCHAR(30) DEFAULT NULL,
+  `status` VARCHAR(30) DEFAULT NULL,
+  `price` FLOAT DEFAULT NULL,
+  `created_at` DATE DEFAULT CURRENT_TIMESTAMP()
+);
+
+CREATE TABLE `librarians` (
+  `id` INT(11) NOT NULL,
+  `name` VARCHAR(100) NOT NULL,
+  `email` VARCHAR(100) NOT NULL,
+  `cpf` VARCHAR(20) NOT NULL,
+  `phone` PHONE(20) NOT NULL,
+  `address` VARCHAR(255) NOT NULL,
+  `password` VARCHAR(30) NOT NULL,
+  `passwordConfirm` VARCHAR(30) NOT NULL,
+  `created_at` DATE NOT NULL DEFAULT CURRENT_TIMESTAMP()
+);
+
+
+CREATE TABLE `loans` (
+  `id` INT(11) NOT NULL,
+  `title` VARCHAR(50) DEFAULT NULL,
+  `cpfReader` VARCHAR(20) DEFAULT NULL,
+  `created_at` DATE DEFAULT CURRENT_TIMESTAMP(),
+  `returnForecast` DATE DEFAULT NULL
+);
+
+
+CREATE TABLE `readers` (
+  `id` INT(11) NOT NULL,
+  `name` VARCHAR(100) DEFAULT NULL,
+  `email` VARCHAR(20) DEFAULT NULL,
+  `cpf` VARCHAR(20) DEFAULT NULL,
+  `phone` VARCHAR(20) DEFAULT NULL,
+  `address` VARCHAR(100) DEFAULT NULL,
+  `created_at` DATE DEFAULT CURRENT_TIMESTAMP()
+);
+
+
+CREATE TABLE `returns` (
+  `id` INT(11) NOT NULL,
+  `title` VARCHAR(50) DEFAULT NULL,
+  `cpfReader` VARCHAR(20) DEFAULT NULL,
+  `idLoan` INT(11) DEFAULT NULL,
+  `dateLoan` DATE DEFAULT NULL,
+  `returnForecast` DATE DEFAULT NULL,
+  `created_at` DATE DEFAULT CURRENT_TIMESTAMP(),
+  `status` VARCHAR(50) DEFAULT NULL,
+  `fine` VARCHAR(50) DEFAULT NULL
+);

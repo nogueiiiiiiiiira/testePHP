@@ -3,15 +3,19 @@
     background-color: #f5f5f5;
     display: flex;
     width: 100vw;
+    background-image: url(/testephp/assets/biblio.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
   }
   
   .mycontainer {
     background-color: #fff;
-    border-radius: 4px;
+    border-radius: 20px !important;
     box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;  
     padding: 32px;
-    width: 400px;
-    height: 700px;
+    width: 450px;
+    height: 750px;
     text-align: center;
     margin-top: 10vh;
     margin-left: 70vw;
@@ -22,7 +26,7 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-  }
+}
   
 .myh2{
     margin-top: 0;
@@ -37,7 +41,7 @@
     margin: 16px 0;
     padding: 8px;
     width: 80%;
-    height: 50%;
+    height: 3vh;
   }
   
 .mybutton{
@@ -55,6 +59,7 @@
   
   .login{
     color: #4CAF50;
+    font-size: 1.5vh;
     text-decoration: none;
   }
   
@@ -64,4 +69,8 @@
   
 .mybutton{
     width: 85%;
+}
+
+.error-container{
+  font-size: 1.5vh;
 }

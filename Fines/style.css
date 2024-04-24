@@ -70,3 +70,7 @@ nav li a{
     gap: 8vw;
     display: flex;
 }
+
+.error-container{
+    font-size: 1.5vh;
+}
