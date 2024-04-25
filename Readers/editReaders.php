@@ -79,11 +79,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Shop</title>
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
-
 <body>
+    <div id="confirm" class="confirm-modal" style="display: none;">
+        <label>Confirm Action</label>
+        <br>
+        <br>
+        <p>Are you sure that you want to edit this reader?</p>
+        <button id="confirm-yes" class='btn btn-primary btn-sm'>Yes</button>
+        <button id="confirm-no" class='btn btn-danger btn-sm'>No</button>
+    </div>
     <div class="container my-5">
         <h2>Edit Reader</h2>
 
@@ -98,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
         ?>
 
-        <form method="post">
+        <form id="editForm" method="post">
             <input type="hidden" name="id" value="<?php echo $id; ?>">
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label">Name</label>
@@ -148,14 +156,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             <div class="row mb-3">
                 <div class="offset-sm-3 col-sm-3 d-grid">
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button id="submitBtn" type="button" class="btn btn-primary">Submit</button>
                 </div>
                 <div class="col-sm-3 d-grid">
-                    <a href="/testephp/Readers/reader.php" class="btn btn-outline-primary" role="button">Cancel</a>
+                    <a href="/testephp/Readers/readers.php" class="btn btn-outline-primary" role="button">Cancel</a>
                 </div>
             </div>
         </form>
     </div>
-</body>
+    <script>
+        document.getElementById('submitBtn').addEventListener('click', function() {
+            document.getElementById('confirm').style.display = 'block';
 
+            document.getElementById('confirm-yes').onclick = function() {
+                document.getElementById('editForm').submit();
+            };
+
+            document.getElementById('confirm-no').onclick = function() {
+                document.getElementById('confirm').style.display = 'none';
+            };
+        });
+    </script>
+</body>
 </html>

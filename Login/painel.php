@@ -62,7 +62,7 @@ include('protect.php');
                 <li class="dropDown">
                     <a>ACTIONS</a>
                     <div class="dropdownMenu" >
-                        <a href="logout.php">Log Out</a>
+                        <a href="/testephp/Login/logout.php">Log Out</a>
                         <br />
                     </div>
                 </li>

@@ -19,6 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (empty($title) || empty($cpfReader)) {
         $errorMessage = "All the fields are required";
     } else {
+        // Verifica se existe um empréstimo associado ao título e ao CPF fornecidos
         $stmt = $connection->prepare("SELECT title, id, created_at, returnForecast FROM loans WHERE title = ? AND cpfReader = ?");
         $stmt->bind_param("ss", $title, $cpfReader);
         $stmt->execute();
@@ -50,7 +51,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt->bind_param("sssssss", $loanTitle, $cpfReader, $idLoan, $dateLoan, $returnForecast, $reason, $fine);
 
             if ($stmt->execute()) {
-                $successMessage = "Return added correctly";
+                // Atualiza o estoque do livro
+                $updateStockSql = "UPDATE books SET stock = stock + 1 WHERE title = ?";
+                $updateStockStmt = $connection->prepare($updateStockSql);
+                $updateStockStmt->bind_param("s", $title);
+                $updateStockStmt->execute();
+
+                $successMessage = "Return added correctly and stock updated";
                 header("location: /testephp/Returns/returns.php");
                 exit;
             } else {
@@ -61,6 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 }
+
 ?>
 
 

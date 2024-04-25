@@ -76,26 +76,35 @@ else{
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Shop</title>
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
+    <div id="confirm" class="confirm-modal" style="display: none;">
+        <label>Confirm Action</label>
+        <br>
+        <br>
+        <p>Are you sure that you want to edit this book?</p>
+        <button id="confirm-yes" class='btn btn-primary btn-sm'>Yes</button>
+        <button id="confirm-no" class='btn btn-danger btn-sm'>No</button>
+    </div>
     <div class="container my-5">
         <h2>Edit Book</h2>
 
         <?php
-            if( !empty($errorMessage) ) {
-                echo "
+        if (!empty($errorMessage)) {
+            echo "
                     <div class='alert alert-warning alert-dismissible fade show' role='alert'>
                         <strong>$errorMessage</strong>
                         <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
                     </div>
                 ";
-            }
+        }
         ?>
 
-            <form method="post" >
-            <input type="hidden" name="id" value="<?php echo $id; ?>" >
+        <form id="editForm" method="post">
+            <input type="hidden" name="id" value="<?php echo $id; ?>">
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label">Title</label>
                 <div class="col-sm-6">
@@ -107,16 +116,16 @@ else{
                 <div class="col-sm-6">
                     <input type="text" class="form-control" name="author" value="<?php echo $author; ?>">
                 </div>
-            </div> 
+            </div>
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label">Category</label>
                 <div class="col-sm-6">
                     <select class="form-select" name="category" id="category">
                         <option value="">Select the category:</option>
-                        <option value="Ficção" <?php if ($category == "ficcao") echo "selected"; ?>>Ficção</option>
-                        <option value="Não-Ficção" <?php if ($category == "nao-ficcao") echo "selected"; ?>>Não Ficção</option>
-                        <option value="Aventura" <?php if ($category == "aventura") echo "selected"; ?>>Aventura</option>
-                        <option value="Romance" <?php if ($category == "romance") echo "selected"; ?>>Romance</option>
+                        <option value="Ficção" <?php if ($category == "Ficção") echo "selected"; ?>>Ficção</option>
+                        <option value="Não-Ficção" <?php if ($category == "Não-Ficção") echo "selected"; ?>>Não Ficção</option>
+                        <option value="Aventura" <?php if ($category == "Aventura") echo "selected"; ?>>Aventura</option>
+                        <option value="Romance" <?php if ($category == "Romance") echo "selected"; ?>>Romance</option>
                     </select>
                 </div>
             </div>
@@ -125,12 +134,11 @@ else{
                 <div class="col-sm-6">
                     <input type="text" class="form-control" name="stock" value="<?php echo $stock; ?>">
                 </div>
-            </div> 
-
+            </div>
 
             <?php
-                if( !empty($successMessage) ) {
-                    echo "
+            if (!empty($successMessage)) {
+                echo "
                         <div class='row mb-3'>
                             <div class='offset-sm-3 col-sm-6'>
                                 <div class='alert alert-success alert-dismissible fade show' role='alert'>
@@ -140,12 +148,12 @@ else{
                             </div>
                         </div>
                     ";
-                }
+            }
             ?>
 
             <div class="row mb-3">
                 <div class="offset-sm-3 col-sm-3 d-grid">
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button id="submitBtn" type="button" class="btn btn-primary">Submit</button>
                 </div>
                 <div class="col-sm-3 d-grid">
                     <a href="/testephp/Books/books.php" class="btn btn-outline-primary" role="button">Cancel</a>
@@ -153,5 +161,18 @@ else{
             </div>
         </form>
     </div>
+    <script>
+        document.getElementById('submitBtn').addEventListener('click', function() {
+            document.getElementById('confirm').style.display = 'block';
+
+            document.getElementById('confirm-yes').onclick = function() {
+                document.getElementById('editForm').submit();
+            };
+
+            document.getElementById('confirm-no').onclick = function() {
+                document.getElementById('confirm').style.display = 'none';
+            };
+        });
+    </script>
 </body>
 </html>

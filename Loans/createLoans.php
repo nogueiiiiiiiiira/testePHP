@@ -16,12 +16,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $title = $_POST["title"];
     $cpfReader = $_POST["cpfReader"];
 
-    do {
-        if (empty($title) || empty($cpfReader)) {
-            $errorMessage = "All the fields are required";
-            break;
-        }
+    // Consulta SQL para verificar se o livro existe e se há estoque disponível
+    $bookSql = "SELECT * FROM books WHERE title='$title' AND stock > 0";
+    $bookResult = $connection->query($bookSql);
 
+    // Consulta SQL para verificar se o leitor existe
+    $readerSql = "SELECT * FROM readers WHERE cpf='$cpfReader'";
+    $readerResult = $connection->query($readerSql);
+
+    if ($bookResult->num_rows == 0 || $readerResult->num_rows == 0) {
+        $errorMessage = "Book or reader does not exist, or there is no available stock for this book.";
+    } else {
+        // Se o livro e o leitor existirem, proceda com o empréstimo
         $returnForecast = date('Y-m-d', strtotime('+7 days'));
 
         $sql = "INSERT INTO loans(title, cpfReader, returnForecast) " .
@@ -30,18 +36,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         if (!$result) {
             $errorMessage = "Invalid query: " . $connection->error;
-            break;
+        } else {
+            // Atualiza o estoque do livro
+            $bookRow = $bookResult->fetch_assoc();
+            $currentStock = $bookRow['stock'];
+            $newStock = $currentStock - 1;
+            $updateSql = "UPDATE books SET stock = $newStock WHERE title = '$title'";
+            $updateResult = $connection->query($updateSql);
+
+            if (!$updateResult) {
+                // Se a atualização do estoque falhar, você pode querer lidar com isso de forma adequada
+                $errorMessage = "Failed to update stock";
+            } else {
+                $successMessage = "Loan added correctly";
+                header("location: /testephp/Loans/loans.php");
+                exit;
+            }
         }
-
-        $title = "";
-        $cpfReader = "";
-
-        $successMessage = "Loan added correctly";
-
-        header("location: /testephp/Loans/loans.php");
-        exit;
-    } while (false);
+    }
 }
+
 ?>
 
 <!DOCTYPE html>

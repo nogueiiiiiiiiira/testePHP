@@ -9,7 +9,15 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
 </head>
 <body>
-<div class="gap">
+    <div id="confirm" class="confirm-modal" style="display: none;">
+        <label>Confirm Action</label>
+        <br>
+        <br>
+        <p>Are you sure that you want to delete this book?</p>
+        <button id="confirm-yes" class='btn btn-primary btn-sm'>Yes</button>
+        <button id="confirm-no" class='btn btn-danger btn-sm' >No</button>
+    </div>
+    <div class="gap">
         <nav>
             <ul class="gap" >
                 <li class="dropDown">
@@ -51,6 +59,13 @@
                     <a>FINES</a>
                     <div class="dropdownMenu" >
                         <a href="/testephp/Fines/fines.php">Fines</a>
+                        <br />
+                    </div>
+                </li>
+                <li class="dropDown">
+                    <a>ACTIONS</a>
+                    <div class="dropdownMenu" >
+                        <a href="/testephp/Login/logout.php">Log Out</a>
                         <br />
                     </div>
                 </li>
@@ -107,7 +122,7 @@
                             <td>$row[created_at]</td>
                             <td>
                                 <a href='/testephp/Books/editBooks.php?id=$row[id]' class='btn btn-primary btn-sm'>Edit</a>
-                                <a href='/testephp/Books/deleteBooks.php?id=$row[id]' class='btn btn-danger btn-sm' >Delete</a>
+                                <button class='btn btn-danger btn-sm delete-btn' data-url='/testephp/Books/deleteBooks.php?id=$row[id]'>Delete</button>
                             </td>
                         </tr>
                         ";
@@ -116,5 +131,31 @@
             </tbody>
         </table>
     </div>
+    <script>
+    // Função para exibir o modal de confirmação
+        function showConfirmationModal(url) {
+            document.getElementById('confirm').style.display = 'block';
+            
+            // Se o botão "Yes" for clicado, redirecionar para a URL de exclusão
+            document.getElementById('confirm-yes').onclick = function() {
+                window.location.href = url;
+            };
+
+            // Se o botão "No" for clicado, fechar o modal de confirmação
+            document.getElementById('confirm-no').onclick = function() {
+                document.getElementById('confirm').style.display = 'none';
+            };
+        }
+
+        // Adicionar evento de clique aos botões "Delete"
+        var deleteButtons = document.querySelectorAll('.delete-btn');
+        deleteButtons.forEach(function(button) {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+                var deleteUrl = button.getAttribute('data-url');
+                showConfirmationModal(deleteUrl);
+            });
+        });
+    </script> 
 </body>
 </html>
